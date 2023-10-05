@@ -1,12 +1,17 @@
 package dev.oaiqiy.truenas.scale.sdk;
 
+import com.alibaba.fastjson2.JSON;
+import dev.oaiqiy.truenas.scale.sdk.command.TrueNasServicePrefixTreeHolder;
 import dev.oaiqiy.truenas.scale.sdk.common.TrueNasCommand;
 import dev.oaiqiy.truenas.scale.sdk.service.ITrueNasService;
 import dev.oaiqiy.truenas.scale.sdk.service.TrueNasService;
+import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +37,18 @@ public class TrueNasClient {
                     }
                 }));
 
+        Map<String, ITrueNasService> commandMap = new HashMap<>();
+        serviceMap.forEach((k, v) -> {
+            commandMap.put(k.getCommand(), v);
+            if(StringUtils.isNotBlank(k.getAlias())){
+                commandMap.put(k.getAlias(), v);
+            }
+        });
+        TrueNasServicePrefixTreeHolder.init(commandMap);
+    }
+
+    public static Map<String, Object> execute(String command) {
+        return TrueNasServicePrefixTreeHolder.execute(command);
     }
 
     public static Map<String, Object> execute(String command, String... args) {
@@ -45,4 +62,14 @@ public class TrueNasClient {
         return serviceMap.get(command).execute(args);
     }
 
+    public static void main(String[] args) {
+        if (args.length == 1) {
+            System.out.println(JSON.toJSON(execute(args[0])));
+        } else {
+            Scanner in = new Scanner(System.in);
+            String c = in.nextLine();
+            System.out.println(JSON.toJSON(execute(c)));
+        }
+    }
 }
+

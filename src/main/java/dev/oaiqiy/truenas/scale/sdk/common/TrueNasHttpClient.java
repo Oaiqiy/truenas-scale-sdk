@@ -2,19 +2,19 @@ package dev.oaiqiy.truenas.scale.sdk.common;
 
 import com.alibaba.fastjson2.JSON;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.http.Header;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicHeader;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class TrueNasHttpClient {
         try {
             CloseableHttpResponse response = client.execute(httpGet);
             return parseResponse(response, clazz);
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             throw exception(HTTP_FAILED);
         }
     }
@@ -46,7 +46,7 @@ public class TrueNasHttpClient {
         try {
             CloseableHttpResponse response = client.execute(httpGet);
             return parseListResponse(response, clazz);
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             throw exception(HTTP_FAILED);
         }
     }
@@ -57,16 +57,15 @@ public class TrueNasHttpClient {
         HttpPost httpPost = new HttpPost(url);
         StringEntity stringEntity;
         if (body instanceof String) {
-            stringEntity = new StringEntity((String) body, Charset.defaultCharset());
+            stringEntity = new StringEntity((String) body, ContentType.APPLICATION_JSON);
         } else {
-            stringEntity = new StringEntity(JSON.toJSONString(body), Charset.defaultCharset());
+            stringEntity = new StringEntity(JSON.toJSONString(body), ContentType.APPLICATION_JSON);
         }
-        stringEntity.setContentType(ContentType.APPLICATION_JSON.getMimeType());
         httpPost.setEntity(stringEntity);
         try {
             CloseableHttpResponse response = client.execute(httpPost);
             return parseResponse(response, clazz);
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             throw exception(HTTP_FAILED);
         }
     }
@@ -88,8 +87,8 @@ public class TrueNasHttpClient {
         return sb.toString();
     }
 
-    private static <T> T parseResponse(CloseableHttpResponse response, Class<T> clazz) throws IOException {
-        if (response.getStatusLine().getStatusCode() != 200) {
+    private static <T> T parseResponse(CloseableHttpResponse response, Class<T> clazz) throws IOException, ParseException {
+        if (response.getCode() != 200) {
             throw exception(HTTP_FAILED);
         }
         String entity = EntityUtils.toString(response.getEntity());
@@ -100,8 +99,8 @@ public class TrueNasHttpClient {
         }
     }
 
-    private static <T> List<T> parseListResponse(CloseableHttpResponse response, Class<T> clazz) throws IOException {
-        if (response.getStatusLine().getStatusCode() != 200) {
+    private static <T> List<T> parseListResponse(CloseableHttpResponse response, Class<T> clazz) throws IOException, ParseException {
+        if (response.getCode() != 200) {
             throw exception(HTTP_FAILED);
         }
         String entity = EntityUtils.toString(response.getEntity());

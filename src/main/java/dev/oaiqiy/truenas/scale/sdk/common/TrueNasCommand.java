@@ -14,7 +14,9 @@ import static dev.oaiqiy.truenas.scale.sdk.exception.TrueNasExceptionErrorCode.N
 @AllArgsConstructor
 @Getter
 public enum TrueNasCommand {
-    CHART_RELEASE("chart release", "app"),
+    SYSTEM_SHUTDOWN("system shutdown", "shutdown"),
+
+    CHART_RELEASE("chart release query", "app query"),
     CHART_RELEASE_LIST("chart release list", "app list"),
     CHART_RELEASE_POD_STATUS("char release pod status", "app status"),
     CHART_RELEASE_SCALE("chart release scale", "app scale"),
@@ -23,7 +25,7 @@ public enum TrueNasCommand {
     CHART_RELEASE_RESTART("chart release restart", "app restart"),
 
     POOL_DATASET_UNLOCK("pool dataset unlock", "unlock"),
-    POOL_DATASET("pool dataset", null),
+    POOL_DATASET("pool dataset query", null),
     ;
 
     private static final Map<String, TrueNasCommand> duplicate = Maps.newHashMap();

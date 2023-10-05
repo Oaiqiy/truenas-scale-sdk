@@ -13,5 +13,5 @@ public @interface TrueNasService {
 
     TrueNasCommand value();
 
-
+    boolean remote() default true;
 }

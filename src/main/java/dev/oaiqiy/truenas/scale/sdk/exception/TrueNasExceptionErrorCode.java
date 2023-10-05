@@ -13,6 +13,7 @@ public enum TrueNasExceptionErrorCode {
     DATASET_NOT_ENCRYPTED(5),
     RETRY_TIME_OUT(6),
     NO_SUCH_CHART_RELEASE(7),
+    RUN_CMD_FAILED(8),
     ;
 
     private final int code;
