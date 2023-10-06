@@ -7,12 +7,13 @@
     <groupId>dev.oaiqiy</groupId>
     <artifactId>truenas-scale-sdk</artifactId>
     <version>1.0</version>
+    <name>truenas-scale-sdk</name>
+    <description>java command sdk for truenas</description>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     </properties>
 
     <dependencies>
@@ -129,5 +130,32 @@
             </plugin>
         </plugins>
     </build>
+
+    <url>https://github.com/Oaiqiy/truenas-scale-sdk</url>
+    <developers>
+        <developer>
+            <id>Oaiqiy</id>
+            <name>Oaiqiy</name>
+            <email>oaiqiy@gmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <scm>
+        <connection>https://github.com/Oaiqiy/truenas-scale-sdk.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:Oaiqiy/truenas-scale-sdk.git</developerConnection>
+        <url>https://github.com/Oaiqiy/truenas-scale-sdk/tree/master</url>
+    </scm>
 
 </project>
